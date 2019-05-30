@@ -1,0 +1,18 @@
+{
+    "name": "bahadirbirsoz/cs-to-dart",
+    "description": "A class library to convert c# entity files to dart entity files.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bahadır Birsöz",
+            "email": "bahadirbirsoz@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Birsoz\\Converter\\": "src/"
+        }
+    }
+}
