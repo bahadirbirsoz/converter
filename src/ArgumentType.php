@@ -93,9 +93,9 @@ class ArgumentType
         return new ArgumentType(self::TYPE_LISTOF_STRING);
     }
 
-    public static function Object(Struct $struct): ArgumentType
+    public static function Object(string $struct): ArgumentType
     {
-        return new ArgumentType(self::TYPE_OBJECT, $struct);
+        return new ArgumentType(self::TYPE_OBJECT, new Struct($struct));
     }
 
     public static function ObjectArray(Struct $struct): ArgumentType
@@ -103,5 +103,8 @@ class ArgumentType
         return new ArgumentType(self::TYPE_LISTOF_OBJECT, $struct);
     }
 
+    public function is(int $compare){
+        return $this->type == $compare;
+    }
 
 }

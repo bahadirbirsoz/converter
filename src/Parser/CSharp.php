@@ -31,28 +31,30 @@ class CSharp extends Parser
             return new Nspace();
         }
 
-        $namespaceString = substr($this->getSourceCode(), $keywordPosition+ 10);
+        $namespaceString = substr($this->getSourceCode(), $keywordPosition + 10);
         $namespaceString = substr($namespaceString, 0, strpos($namespaceString, '{'));
         $namespaceString = trim($namespaceString);
-        return new Nspace(explode('.',$namespaceString));
+        return new Nspace(explode('.', $namespaceString));
     }
 
 
-
-    function getStructsFromSource()
+    protected function getStructsFromSource()
     {
-        $arr = explode(' class ',$this->getSourceCode());
+        $arr = explode(' class ', $this->getSourceCode());
+
         unset($arr[0]);
         $classes = [];
 
-        foreach ($arr as $str){
-            $definitionBeginPosition = strpos($str,'{');
-            $className = trim(substr($str,0,$definitionBeginPosition));
-            $classBody = substr($str,$definitionBeginPosition);
-            $struct =  new Struct($className);
+        foreach ($arr as $str) {
+            $definitionBeginPosition = strpos($str, '{');
+            $className = trim(substr($str, 0, $definitionBeginPosition));
+            $classBody = substr($str, $definitionBeginPosition + 2);
+
+
+            $struct = new Struct($className);
 
             $arguments = $this->getArgumentsFromClassBody($classBody);
-            foreach ($arguments as $argument){
+            foreach ($arguments as $argument) {
                 $struct->addArgument($argument);
             }
             $classes[] = $struct;
@@ -61,22 +63,65 @@ class CSharp extends Parser
         return $classes;
     }
 
-    function getArgumentsFromClassBody($str){
+    function getArgumentsFromClassBody($str)
+    {
         $args = [];
-        $arr = explode('{ get; set; }',$str);
+        $arr = explode('{ get; set; }', $str);
         array_pop($arr);
-        unset($arr[0]);
 
-        foreach($arr as $item){
+
+
+
+        foreach ($arr as $item) {
             $item = trim($item);
-            $words = explode(' ',$item);
-            $args[] = new Argument( $words[2] , $this->getArgumentTypeFromKeyword($words[1]) );
+            $words = explode(' ', $item);
+
+
+            while (($key = array_search(' ', $words)) !== false) {
+                unset($words[$key]);
+            }
+            if (($key = array_search('private', $words)) !== false) {
+                unset($words[$key]);
+            }
+            if (($key = array_search('public', $words)) !== false) {
+                unset($words[$key]);
+            }
+            if (($key = array_search('virtual', $words)) !== false) {
+                unset($words[$key]);
+            }
+
+            $nameWord = array_pop($words);
+            $typeWord = array_pop($words);
+
+
+            $arg = new Argument($nameWord, $this->getArgumentTypeFromKeyword($typeWord));
+
+            $arg->canBeNull(substr($typeWord,-1) == "?");
+
+            $args[] = $arg;
         }
         return $args;
     }
 
-    protected function getArgumentTypeFromKeyword($keyword):ArgumentType{
-        return ArgumentType::Datetime();
+    protected function getArgumentTypeFromKeyword($keyword): ArgumentType
+    {
+        if(substr($keyword,-1) == "?"){
+            $keyword = substr($keyword,0,-1);
+        }
+        switch ($keyword) {
+            case "char":
+            case "string":
+                return ArgumentType::String();
+            case "int":
+                return ArgumentType::Int();
+            case "decimal":
+                return ArgumentType::Decimal();
+            case "Date":
+                return ArgumentType::Decimal();
+            case "DateTime":
+                return ArgumentType::Decimal();
+            default:
+                return ArgumentType::Object("OBJ".$keyword);
+        }
     }
-
 }

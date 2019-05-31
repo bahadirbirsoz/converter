@@ -1,0 +1,69 @@
+<?php
+use Birsoz\Converter\ArgumentType;
+/* @var $writer \Birsoz\Converter\Writer\Dart */
+/* @var $parser \Birsoz\Converter\Parser */
+?>
+
+<?php foreach ($parser->getStructs() as $struct): ?>
+class <?= $struct->getClassName() ?> {
+
+    <?php foreach ($struct->getArgs() as $arg): ?>
+    <?php if($arg->is( ArgumentType::TYPE_STRING)): ?>
+    string <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_INTEGER)): ?>
+    int <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_DECIMAL)): ?>
+    decimal <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_DATE)): ?>
+    DateTime <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_DATETIME)): ?>
+    DateTime <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_OBJECT)): ?>
+    <?= $arg->getType()->struct->getClassName() ?> <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_LISTOF_STRING)): ?>
+    List<string> <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_LISTOF_INTEGER)): ?>
+    List<int> <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_LISTOF_DECIMAL)): ?>
+    List<decimal> <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_LISTOF_DATE)): ?>
+    List<DateTime> <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_LISTOF_DATETIME)): ?>
+    List<DateTime> <?= $arg->getName() ?>;
+    <?php endif;?>
+    <?php if($arg->is( ArgumentType::TYPE_LISTOF_DATETIME)): ?>
+    List<<?= $arg->getType() ?>> <?= $arg->getName() ?>;
+    <?php endif;?>
+
+
+    <?php endforeach; ?>
+
+    <?= $struct->getClassName() ?>({
+        {{constructorLines}}
+    });
+
+    factory <?= $struct->getClassName() ?>.fromJson(Map<String, dynamic> json) => new Album(
+        <?php foreach ($struct->getArgs() as $arg): ?>
+
+        <?php endforeach; ?>
+    );
+
+    Map<String, dynamic> toJson() => {
+        <?php foreach ($struct->getArgs() as $arg): ?>
+
+        <?php endforeach; ?>
+    };
+
+
+    }
+<?php endforeach;?>

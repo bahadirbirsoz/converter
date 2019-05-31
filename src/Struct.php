@@ -7,7 +7,7 @@ class Struct{
     protected $name;
 
     /**
-     * @var Argument
+     * @var Argument[]
      */
     protected $arguments;
 
@@ -28,6 +28,17 @@ class Struct{
 
     public function getNspace():Nspace{
         return $this->nspace;
+    }
+
+    public function getClassName(){
+        return $this->name;
+    }
+
+    /**
+     * @return Argument[]
+     */
+    public function getArgs(){
+        return $this->arguments;
     }
 
 }

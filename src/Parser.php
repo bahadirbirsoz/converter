@@ -33,7 +33,7 @@ abstract class Parser
             $this->nspace = $this->getNamespaceFromSource();
         }
 
-        $this->getStructsFromSource();
+        $this->structs = $this->getStructsFromSource();
 
     }
 
@@ -41,11 +41,18 @@ abstract class Parser
 
     abstract function getNamespaceFromSource():Nspace;
 
+    /**
+     * @return Struct[]
+     */
+    public function getStructs(){
+        return $this->structs;
+    }
+
 
     /**
      * @return Struct[]
      */
-    abstract function getStructsFromSource();
+    abstract protected function getStructsFromSource();
 
     private function loadSourceCode($path)
     {

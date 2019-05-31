@@ -11,5 +11,7 @@ namespace Birsoz\Converter;
 
 abstract class Writer
 {
+    public function write(){
 
+    }
 }
