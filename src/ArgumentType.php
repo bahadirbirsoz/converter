@@ -15,22 +15,22 @@ class ArgumentType
     protected $type;
     protected $className;
 
+    CONST TYPE_OBJECT = 0;
     CONST TYPE_INTEGER = 1;
     CONST TYPE_DECIMAL = 2;
     CONST TYPE_STRING = 3;
     CONST TYPE_DATE = 4;
-    CONST TYPE_DATETIME = 6;
+    CONST TYPE_DATETIME = 5;
 
 
+    CONST TYPE_LISTOF_OBJECT = 10;
     CONST TYPE_LISTOF_INTEGER = 11;
     CONST TYPE_LISTOF_DECIMAL = 12;
     CONST TYPE_LISTOF_STRING = 13;
     CONST TYPE_LISTOF_DATE = 14;
-    CONST TYPE_LISTOF_DATETIME = 16;
+    CONST TYPE_LISTOF_DATETIME = 15;
 
 
-    CONST TYPE_OBJECT = 9;
-    CONST TYPE_LISTOF_OBJECT = 19;
 
 
     private function __construct(int $type, Struct $struct = null)
@@ -93,9 +93,9 @@ class ArgumentType
         return new ArgumentType(self::TYPE_LISTOF_STRING);
     }
 
-    public static function Object(string $struct): ArgumentType
+    public static function Object(Struct $struct): ArgumentType
     {
-        return new ArgumentType(self::TYPE_OBJECT, new Struct($struct));
+        return new ArgumentType(self::TYPE_OBJECT, $struct);
     }
 
     public static function ObjectArray(Struct $struct): ArgumentType

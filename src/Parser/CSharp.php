@@ -50,7 +50,6 @@ class CSharp extends Parser
             $className = trim(substr($str, 0, $definitionBeginPosition));
             $classBody = substr($str, $definitionBeginPosition + 2);
 
-
             $struct = new Struct($className);
 
             $arguments = $this->getArgumentsFromClassBody($classBody);
@@ -69,13 +68,12 @@ class CSharp extends Parser
         $arr = explode('{ get; set; }', $str);
         array_pop($arr);
 
-
-
-
         foreach ($arr as $item) {
+            $list = false;
+            $nullable = false;
+
             $item = trim($item);
             $words = explode(' ', $item);
-
 
             while (($key = array_search(' ', $words)) !== false) {
                 unset($words[$key]);
@@ -93,35 +91,50 @@ class CSharp extends Parser
             $nameWord = array_pop($words);
             $typeWord = array_pop($words);
 
+            if(substr($typeWord,-1) == "?"){
+                $nullable = true;
+                $typeWord = substr($typeWord,0,-1);
+            }
+            if(substr($typeWord,-2) == "[]"){
+                $list = true;
+                $typeWord = substr($typeWord,0,-2);
+            }
 
-            $arg = new Argument($nameWord, $this->getArgumentTypeFromKeyword($typeWord));
+            if(substr($typeWord,0,5)=='List<'){
+                $list = true;
+                $typeWord = substr($typeWord,5,-1);
+            }
 
-            $arg->canBeNull(substr($typeWord,-1) == "?");
+
+            $argType = $this->getArgumentTypeFromKeyword($typeWord,$list);
+            $arg = new Argument($nameWord, $argType);
+
+            $arg->canBeNull($nullable);
 
             $args[] = $arg;
         }
+
         return $args;
     }
 
-    protected function getArgumentTypeFromKeyword($keyword): ArgumentType
+    protected function getArgumentTypeFromKeyword($keyword, $list = false): ArgumentType
     {
-        if(substr($keyword,-1) == "?"){
-            $keyword = substr($keyword,0,-1);
-        }
+
         switch ($keyword) {
             case "char":
             case "string":
-                return ArgumentType::String();
+                return $list ? ArgumentType::StringArray() : ArgumentType::String();
             case "int":
-                return ArgumentType::Int();
+                return $list ? ArgumentType::IntArray() : ArgumentType::Int();
             case "decimal":
-                return ArgumentType::Decimal();
+                return $list ?  ArgumentType::DecimalArray() : ArgumentType::Decimal();
             case "Date":
-                return ArgumentType::Decimal();
+                return $list ? ArgumentType::DatetimeArray() : ArgumentType::Datetime();
             case "DateTime":
-                return ArgumentType::Decimal();
+                return $list? ArgumentType::DatetimeArray() :  ArgumentType::Datetime();
             default:
-                return ArgumentType::Object("OBJ".$keyword);
+                $struct = new Struct($keyword);
+                return $list? ArgumentType::ObjectArray($struct) : ArgumentType::Object($struct);
         }
     }
 }
