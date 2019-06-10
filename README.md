@@ -9,7 +9,37 @@ Writer will depend on template rendering. So a template engine shall be added to
 
 In the end, this class may convert entities from various languages to various languages. It may also have some database reading or writing capabilities. 
 
+### Install
+ 
+To install this library as global, you can add path of `bin` directory to your `PATH` variable.   
+
+
+### Usage
+ 
+Currently converting with a config file is supportted.
+
+``````
+
+{
+  "source": "entities",
+  "sourceLang": "cs",
+  "target": "export",
+  "targetLang": "dart"
+}
+
+``````   
+
+Run followig
+```conv ```
+
+
+### API
+
+You can read the code for the moment.
+
 #### TESTS
  
-Tests may include checking if the code is the same after a few conversion. 
+Tests may include checking if the code is the same after a few conversion.
+
+
 

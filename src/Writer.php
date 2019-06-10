@@ -11,7 +11,8 @@ namespace Birsoz\Converter;
 
 abstract class Writer
 {
-    public function write(){
+    abstract public function write();
 
-    }
+    abstract public function writeToFile($filePatb);
+
 }

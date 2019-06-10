@@ -52,14 +52,26 @@ class Dart extends Writer
         $parser = $this->parser;
         include $this->getClassTemplatePath();
         $content = ob_get_contents();
-        var_dump($content);
-        die;
+        echo $content;
+        ob_clean();
+    }
+
+    public function writeToFile($targetPath)
+    {
+        ob_start();
+        $writer = $this;
+        $parser = $this->parser;
+        include $this->getClassTemplatePath();
+        $content = ob_get_contents();
+        file_put_contents($targetPath, $content);
+        echo "Writing " . $targetPath . "\n";
+        ob_clean();
     }
 
 
     protected function getClassTemplatePath()
     {
-        return 'lib/views/dart/struct.phtml';
+        return dirname(dirname(__DIR__)) . '/views/dart/struct.phtml';
     }
 
     protected function getTargetArgumentName(Argument $argument)
@@ -152,7 +164,7 @@ class Dart extends Writer
                 $middle = 'new List<dynamic>.from(' . $this->getTargetArgumentName($argument) . '.map((x) => x.toJson())) ';
                 break;
         }
-        return $begin.$middle.$end;
+        return $begin . $middle . $end;
     }
 
     public function getConstructorLine(Argument $argument)

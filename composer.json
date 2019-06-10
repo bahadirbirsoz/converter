@@ -9,7 +9,6 @@
             "email": "bahadirbirsoz@gmail.com"
         }
     ],
-    "require": {},
     "autoload": {
         "psr-4": {
             "Birsoz\\Converter\\": "src/"
