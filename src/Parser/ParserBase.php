@@ -6,9 +6,12 @@
  * Time: 00:11
  */
 
-namespace Birsoz\Converter;
+namespace Birsoz\Converter\Parser;
 
-abstract class Parser
+use Birsoz\Converter\Nspace;
+use Birsoz\Converter\Struct;
+
+abstract class ParserBase
 {
 
     private $sourceCode;
@@ -23,8 +26,13 @@ abstract class Parser
      */
     protected $nspace;
 
-    public final function __construct($path)
+    public function __construct()
     {
+
+    }
+
+
+    public function parse($path){
         if (!file_exists($path)) {
             throw new \Exception("File not found in '$path'");
         }
@@ -33,13 +41,13 @@ abstract class Parser
             $this->nspace = $this->getNamespaceFromSource();
         }
 
-        $this->structs = $this->getStructsFromSource();
+        return $this->getStructsFromSource();
 
     }
 
     abstract function sourceHasNamespaces():bool ;
 
-    abstract function getNamespaceFromSource():Nspace;
+    abstract public function getNamespaceFromSource():Nspace;
 
     /**
      * @return Struct[]
@@ -50,7 +58,7 @@ abstract class Parser
 
 
     /**
-     * @return Struct[]
+     * @return Struct
      */
     abstract protected function getStructsFromSource();
 

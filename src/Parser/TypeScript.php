@@ -14,26 +14,17 @@ use Birsoz\Converter\ArgumentType;
 use Birsoz\Converter\Nspace;
 use Birsoz\Converter\Struct;
 
-class CSharp extends ParserBase
+class TypeScript extends ParserBase
 {
 
     function sourceHasNamespaces(): bool
     {
-        return true;
+        return false;
     }
 
     public function getNamespaceFromSource(): Nspace
     {
-        $keyword = 'namespace';
-        $keywordPosition = strpos($this->getSourceCode(), $keyword);
-        if ($keywordPosition === false) {
-            return new Nspace();
-        }
-
-        $namespaceString = substr($this->getSourceCode(), $keywordPosition + 10);
-        $namespaceString = substr($namespaceString, 0, strpos($namespaceString, '{'));
-        $namespaceString = trim($namespaceString);
-        return new Nspace(explode('.', $namespaceString));
+        return new Nspace("");
     }
 
 
@@ -64,7 +55,7 @@ class CSharp extends ParserBase
     function getArgumentsFromClassBody($str)
     {
         $args = [];
-        $arr = explode('{ get; set; }', $str);
+        $arr = explode("\n", $str);
         array_pop($arr);
 
         foreach ($arr as $item) {
@@ -72,7 +63,22 @@ class CSharp extends ParserBase
             $nullable = false;
 
             $item = trim($item);
+            if(!$item){
+                continue;
+            }
+
+
+            if( strstr($item,"constructor(") ){
+                break;
+            }
+
             $words = explode(' ', $item);
+
+            if( in_array("}",$words) ){
+                break;
+            }
+
+
 
             while (($key = array_search(' ', $words)) !== false) {
                 unset($words[$key]);
@@ -87,21 +93,22 @@ class CSharp extends ParserBase
                 unset($words[$key]);
             }
 
-            $nameWord = array_pop($words);
-            $typeWord = array_pop($words);
+            $nameWord = $words[0];
+            $typeWord = $words[1];
 
-            if(substr($typeWord,-1) == "?"){
-                $nullable = true;
-                $typeWord = substr($typeWord,0,-1);
+            if(substr($nameWord,-1) == ":"){
+                $nameWord = substr($nameWord,0,-1);
             }
+
             if(substr($typeWord,-2) == "[]"){
                 $list = true;
                 $typeWord = substr($typeWord,0,-2);
             }
 
-            if(substr($typeWord,0,5)=='List<'){
+
+            if(substr($typeWord,0,6)=='Array<'){
                 $list = true;
-                $typeWord = substr($typeWord,5,-1);
+                $typeWord = substr($typeWord,6,-1);
             }
 
 
@@ -118,15 +125,14 @@ class CSharp extends ParserBase
 
     protected function getArgumentTypeFromKeyword($keyword, $list = false): ArgumentType
     {
-
         switch ($keyword) {
             case "char":
             case "string":
                 return $list ? ArgumentType::StringArray() : ArgumentType::String();
-            case "int":
-                return $list ? ArgumentType::IntArray() : ArgumentType::Int();
-            case "decimal":
+            case "number":
                 return $list ?  ArgumentType::DecimalArray() : ArgumentType::Decimal();
+            case "boolean":
+                return $list ?  ArgumentType::BooleanArray() : ArgumentType::Boolean();
             case "Date":
                 return $list ? ArgumentType::DatetimeArray() : ArgumentType::Datetime();
             case "DateTime":

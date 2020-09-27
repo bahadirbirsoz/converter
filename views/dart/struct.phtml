@@ -1,10 +1,11 @@
 <?php
 use Birsoz\Converter\ArgumentType;
 /* @var $writer \Birsoz\Converter\Writer\Dart */
-/* @var $parser \Birsoz\Converter\Parser */
+/* @var $structs \Birsoz\Converter\Struct[] */
+
 ?>
 
-<?php foreach ($parser->getStructs() as $struct): ?>
+<?php foreach ($structs as $struct): ?>
 class <?= $struct->getClassName() ?> {
 
     <?php foreach ($struct->getArgs() as $arg): ?>

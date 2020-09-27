@@ -1,4 +1,6 @@
 # The Converter Library
+
+
 A class library to convert c# entity files to dart entity files.
 
 The idea is to read and parse given file in c# and export dart files with .toJson .fromJson .toMap .fromMap .fromJsonArray methods and parsing json inputs in given entity.
@@ -8,6 +10,13 @@ Parser and the writer is planned as abstract classes. But it's a little bir hard
 Writer will depend on template rendering. So a template engine shall be added to this.
 
 In the end, this class may convert entities from various languages to various languages. It may also have some database reading or writing capabilities. 
+
+Years later, TypesScript parser added.
+
+### Docker Install
+ 
+To install this library as docker image, I'm working on it. There are a few issues about host file system    
+
 
 ### Install
  
@@ -22,9 +31,9 @@ Currently converting with a config file is supportted.
 
 {
   "source": "entities",
-  "sourceLang": "cs",
+  "source_ext": "cs", // or "ts"
   "target": "export",
-  "targetLang": "dart"
+  "target_ext": "dart"
 }
 
 ``````   

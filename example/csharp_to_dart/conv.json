@@ -1,0 +1,6 @@
+{
+  "source": "entities",
+  "source_ext": "cs",
+  "target": "export",
+  "target_ext": "dart"
+}

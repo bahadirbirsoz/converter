@@ -1,6 +1,6 @@
 {
   "source": "entities",
-  "sourceLang": "cs",
+  "source_ext": "ts",
   "target": "export",
-  "targetLang": "dart"
+  "target_ext": "dart"
 }
