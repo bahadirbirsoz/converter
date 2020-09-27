@@ -9,6 +9,11 @@ Writer will depend on template rendering. So a template engine shall be added to
 
 In the end, this class may convert entities from various languages to various languages. It may also have some database reading or writing capabilities. 
 
+### Docker Install
+ 
+To install this library as docker image, I'm working on it. There are a few issues about host file system    
+
+
 ### Install
  
 To install this library as global, you can add path of `bin` directory to your `PATH` variable.   
