@@ -4,17 +4,11 @@ namespace Birsoz\Converter\Writer;
 
 use Birsoz\Converter\Argument;
 use Birsoz\Converter\ArgumentType;
+use Birsoz\Converter\Struct;
 use Birsoz\Converter\Writer;
 
 class Dart extends Writer
 {
-    protected $parser;
-
-    public function __construct($parser)
-    {
-        $this->parser = $parser;
-    }
-
 
     public function getStaticTypeOf(Argument $argument)
     {
@@ -43,29 +37,6 @@ class Dart extends Writer
             case $argument->is(ArgumentType::TYPE_LISTOF_OBJECT):
                 return 'List<' . $argument->getType()->struct->getClassName() . '>';
         }
-    }
-
-    public function write()
-    {
-        ob_start();
-        $writer = $this;
-        $parser = $this->parser;
-        include $this->getClassTemplatePath();
-        $content = ob_get_contents();
-        echo $content;
-        ob_clean();
-    }
-
-    public function writeToFile($targetPath)
-    {
-        ob_start();
-        $writer = $this;
-        $parser = $this->parser;
-        include $this->getClassTemplatePath();
-        $content = ob_get_contents();
-        file_put_contents($targetPath, $content);
-        echo "Writing " . $targetPath . "\n";
-        ob_clean();
     }
 
 

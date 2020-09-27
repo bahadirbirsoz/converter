@@ -11,8 +11,28 @@ namespace Birsoz\Converter;
 
 abstract class Writer
 {
-    abstract public function write();
 
-    abstract public function writeToFile($filePatb);
+    public function write($structs)
+    {
+        ob_start();
+        $writer = $this;
+        include $this->getClassTemplatePath();
+        $content = ob_get_contents();
+        echo $content;
+        ob_clean();
+    }
+
+    public function writeToFile($structs, $targetPath)
+    {
+        ob_start();
+        $writer = $this;
+        include $this->getClassTemplatePath();
+        $content = ob_get_contents();
+        file_put_contents($targetPath, $content);
+        echo "Writing " . $targetPath . "\n";
+        ob_clean();
+    }
+
+    protected abstract function getClassTemplatePath();
 
 }
