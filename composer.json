@@ -13,5 +13,10 @@
         "psr-4": {
             "Birsoz\\Converter\\": "src/"
         }
+    },
+    "require-dev": {
+        "phalcon/ide-stubs": "^4.0",
+        "phalcon/incubator-test": "^v1.0.0-alpha.1",
+        "phalcon/devtools": "^4.0"
     }
 }

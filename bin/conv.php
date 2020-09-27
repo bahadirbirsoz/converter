@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-
 define('BASE_PATH', dirname(__DIR__));
 define('EXEC_PATH',getcwd());
-
+die (__DIR__);
 require BASE_PATH . '/vendor/autoload.php';
 
 function is_valid_config(){
@@ -14,16 +13,27 @@ return true;
 unset ($argv[0]);
 
 
-$poosibleConfigFile = false;
+$possibleConfigFile = false;
 $config = false;
 $possibleConfig=[];
-$poosibleConfigFile = EXEC_PATH.'/conv.json';
+$possibleConfigFile = EXEC_PATH.'/conv.json';
 if(!file_exists(EXEC_PATH.'/conv.json')){
-    $poosibleConfigFile = false;
+    $possibleConfigFile = false;
 }
 
-if($poosibleConfigFile){
-    $possibleConfig = json_decode(file_get_contents($poosibleConfigFile));
+if(!$possibleConfigFile){
+    if( $argv[1] ){
+        $possibleConfigFile = $argv[1];
+        if( substr($possibleConfigFile,0,1) != "/" ){
+            $possibleConfigFile  = __DIR__ . $possibleConfigFile;
+        }
+    }
+    $possibleConfigFile = $argv[1];
+
+}
+
+if($possibleConfigFile){
+    $possibleConfig = json_decode(file_get_contents($possibleConfigFile));
     if(is_valid_config($possibleConfig)){
         $config = (array)$possibleConfig;
     }
