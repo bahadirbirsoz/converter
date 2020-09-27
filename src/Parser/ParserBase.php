@@ -26,8 +26,13 @@ abstract class ParserBase
      */
     protected $nspace;
 
-    public final function __construct($path)
+    public function __construct()
     {
+
+    }
+
+
+    public function parse($path){
         if (!file_exists($path)) {
             throw new \Exception("File not found in '$path'");
         }
@@ -36,7 +41,7 @@ abstract class ParserBase
             $this->nspace = $this->getNamespaceFromSource();
         }
 
-        $this->structs = $this->getStructsFromSource();
+        return $this->getStructsFromSource();
 
     }
 
@@ -53,7 +58,7 @@ abstract class ParserBase
 
 
     /**
-     * @return Struct[]
+     * @return Struct
      */
     abstract protected function getStructsFromSource();
 
