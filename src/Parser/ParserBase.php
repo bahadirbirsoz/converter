@@ -6,9 +6,12 @@
  * Time: 00:11
  */
 
-namespace Birsoz\Converter;
+namespace Birsoz\Converter\Parser;
 
-abstract class Parser
+use Birsoz\Converter\Nspace;
+use Birsoz\Converter\Struct;
+
+abstract class ParserBase
 {
 
     private $sourceCode;
@@ -39,7 +42,7 @@ abstract class Parser
 
     abstract function sourceHasNamespaces():bool ;
 
-    abstract function getNamespaceFromSource():Nspace;
+    abstract public function getNamespaceFromSource():Nspace;
 
     /**
      * @return Struct[]

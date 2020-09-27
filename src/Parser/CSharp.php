@@ -12,10 +12,9 @@ namespace Birsoz\Converter\Parser;
 use Birsoz\Converter\Argument;
 use Birsoz\Converter\ArgumentType;
 use Birsoz\Converter\Nspace;
-use Birsoz\Converter\Parser;
 use Birsoz\Converter\Struct;
 
-class CSharp extends Parser
+class CSharp extends ParserBase
 {
 
     function sourceHasNamespaces(): bool
@@ -23,7 +22,7 @@ class CSharp extends Parser
         return true;
     }
 
-    function getNamespaceFromSource(): Nspace
+    public function getNamespaceFromSource(): Nspace
     {
         $keyword = 'namespace';
         $keywordPosition = strpos($this->getSourceCode(), $keyword);
