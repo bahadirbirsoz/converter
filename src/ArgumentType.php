@@ -14,6 +14,8 @@ class ArgumentType
 
     protected $type;
     protected $className;
+    protected $struct = null;
+
 
     CONST TYPE_OBJECT = 0;
     CONST TYPE_INTEGER = 1;
@@ -41,6 +43,17 @@ class ArgumentType
         if ($struct) {
             $this->struct = $struct;
         }
+    }
+
+    public function getStruct(){
+        if(!$this->hasStruct()){
+            throw new \Exception("You sholud have checked if the struct exists");
+        }
+        return $this->struct;
+    }
+
+    public function hasStruct(){
+        return $this->struct != null;
     }
 
     public static function Date(): ArgumentType

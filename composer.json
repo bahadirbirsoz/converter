@@ -1,6 +1,6 @@
 {
     "name": "bahadirbirsoz/converter",
-    "description": "A class library to convert c# entity files to dart entity files.",
+    "description": "A class library to convert c# or typescript entity files to dart entity files.",
     "type": "library",
     "license": "MIT",
     "authors": [
