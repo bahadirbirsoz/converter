@@ -36,8 +36,10 @@ class TypeScript extends ParserBase
         $classes = [];
 
         foreach ($arr as $str) {
+            $nextWordBeginPosition = strpos($str, ' ');
             $definitionBeginPosition = strpos($str, '{');
-            $className = trim(substr($str, 0, $definitionBeginPosition));
+
+            $className = trim(substr($str, 0, $nextWordBeginPosition ? $nextWordBeginPosition : $definitionBeginPosition));
             $classBody = substr($str, $definitionBeginPosition + 2);
 
             $struct = new Struct($className);
@@ -63,21 +65,20 @@ class TypeScript extends ParserBase
             $nullable = false;
 
             $item = trim($item);
-            if(!$item){
+            if (!$item) {
                 continue;
             }
 
 
-            if( strstr($item,"constructor(") ){
+            if (strstr($item, "constructor(")) {
                 break;
             }
 
             $words = explode(' ', $item);
 
-            if( in_array("}",$words) ){
+            if (in_array("}", $words)) {
                 break;
             }
-
 
 
             while (($key = array_search(' ', $words)) !== false) {
@@ -92,32 +93,38 @@ class TypeScript extends ParserBase
             if (($key = array_search('virtual', $words)) !== false) {
                 unset($words[$key]);
             }
-
+            if(count($words) < 2){
+                continue;
+            }
             $nameWord = $words[0];
             $typeWord = $words[1];
-
-            if(substr($nameWord,-1) == ":"){
-                $nameWord = substr($nameWord,0,-1);
+            if (!$nameWord || !$typeWord) {
+                continue;
             }
 
-            if(substr($typeWord,-2) == "[]"){
+            if (substr($nameWord, -1) == ":") {
+                $nameWord = substr($nameWord, 0, -1);
+            }
+
+            if (substr($typeWord, -2) == "[]") {
                 $list = true;
-                $typeWord = substr($typeWord,0,-2);
+                $typeWord = substr($typeWord, 0, -2);
             }
 
 
-            if(substr($typeWord,0,6)=='Array<'){
+            if (substr($typeWord, 0, 6) == 'Array<') {
                 $list = true;
-                $typeWord = substr($typeWord,6,-1);
+                $typeWord = substr($typeWord, 6, -1);
             }
 
 
-            $argType = $this->getArgumentTypeFromKeyword($typeWord,$list);
+            $argType = $this->getArgumentTypeFromKeyword($typeWord, $list);
             $arg = new Argument($nameWord, $argType);
 
             $arg->canBeNull($nullable);
 
             $args[] = $arg;
+
         }
 
         return $args;
@@ -130,16 +137,16 @@ class TypeScript extends ParserBase
             case "string":
                 return $list ? ArgumentType::StringArray() : ArgumentType::String();
             case "number":
-                return $list ?  ArgumentType::DecimalArray() : ArgumentType::Decimal();
+                return $list ? ArgumentType::DecimalArray() : ArgumentType::Decimal();
             case "boolean":
-                return $list ?  ArgumentType::BooleanArray() : ArgumentType::Boolean();
+                return $list ? ArgumentType::BooleanArray() : ArgumentType::Boolean();
             case "Date":
                 return $list ? ArgumentType::DatetimeArray() : ArgumentType::Datetime();
             case "DateTime":
-                return $list? ArgumentType::DatetimeArray() :  ArgumentType::Datetime();
+                return $list ? ArgumentType::DatetimeArray() : ArgumentType::Datetime();
             default:
                 $struct = new Struct($keyword);
-                return $list? ArgumentType::ObjectArray($struct) : ArgumentType::Object($struct);
+                return $list ? ArgumentType::ObjectArray($struct) : ArgumentType::Object($struct);
         }
     }
 }
